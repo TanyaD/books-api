@@ -6,7 +6,8 @@ class BookList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            books:[]
+            books: [],
+            searchQuery:''
         };
     }
 
@@ -22,19 +23,22 @@ class BookList extends Component {
             console.log(error);
         }
     }
+ 
+    handleChange = (e) => {
+        const itemName = e.target.name;
+        const itemValue = e.target.value;
 
-    displayList() {
-        return this.state.books.map((item) => (
-            <SingleBook key={item.book_uri} item={item} />
-        ))
+        this.setState({ [itemName]: itemValue})
     }
+
     render() {
+        const dataFilter = item => item.title.toLowerCase().match(this.state.searchQuery.toLowerCase()) && true;
+        const filteredBooks = this.state.books.filter(dataFilter);
         return (
             <div className="App">
                 <p>Booklist:</p>
-                <ul>
-                    {this.displayList()}
-                </ul>
+                <input type='text' name='searchQuery' value={this.state.searchQuery} placeholder='Search book by name' onChange={this.handleChange}/>
+                <SingleBook books={filteredBooks}/>
             </div>
         );
     }
